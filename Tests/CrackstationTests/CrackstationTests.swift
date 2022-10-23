@@ -48,7 +48,7 @@ final class CrackStationTests: XCTestCase {
         XCTAssertNil(crackedPassword)
     }
     
-    func testWeirdInput() throws {
+    func testEmptyInput() throws {
         // Given
         let crackstation = try CrackStation()
         do {
