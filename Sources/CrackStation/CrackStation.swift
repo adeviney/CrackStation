@@ -6,7 +6,8 @@ public class CrackStation {
     
     enum CrackStationError: Error {
         case failedToLoadHashFromDisk(String)
-        // case hashNotFound(String) - not currently implemented
+        case invalidPasswordInput(String)
+        // case hashNotFound(String) (not currently implemented)
     }
 
     /// When CrackStation is initailized, it will attempt to load the look-up table from the file
@@ -14,6 +15,7 @@ public class CrackStation {
     public init() throws {
             self.mappingToPlaintext = try CrackStation.loadDictionaryFromFile()
     }
+    
     
     static func loadDictionaryFromFile() throws -> [String: String] {
         guard let filePath = Bundle.module.path(forResource: "HashtoPlaintextData", ofType: "json") else {
@@ -33,7 +35,10 @@ public class CrackStation {
     
     /// Either returns the cracked plain-text password
     /// or, if unable to crack, then returns nil.
-    public func crack(_ password: String) -> String? {
+    public func crack(_ password: String) throws -> String? {
+        if password.isEmpty {
+            throw CrackStationError.invalidPasswordInput("Your password is empty")
+        }
         if let crackedPassword = self.mappingToPlaintext[password] {
             return crackedPassword
         }
