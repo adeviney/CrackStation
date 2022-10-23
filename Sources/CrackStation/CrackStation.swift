@@ -1,5 +1,4 @@
 import Foundation
-import CryptoKit
 
 public class CrackStation {
     private var mappingToPlaintext: [String: String]
@@ -35,6 +34,8 @@ public class CrackStation {
     
     /// Either returns the cracked plain-text password
     /// or, if unable to crack, then returns nil.
+    ///
+    /// Throws an error if the password is empty
     public func crack(_ password: String) throws -> String? {
         if password.isEmpty {
             throw CrackStationError.invalidPasswordInput("Your password is empty")
