@@ -27,4 +27,10 @@ final class CrackStationTests: XCTestCase {
         let crackedPassword = crackstation.crack("902ba3cda1883801594b6e1b452790cc53948fda")
         XCTAssert(crackedPassword == "7")
     }
+    
+    func testUnabletoCrack() throws {
+        let crackstation = try CrackStation()
+        let crackedPassword = crackstation.crack("c48ee8a8448ed522eaf905a16361bdd816ededae")
+        XCTAssertNil(crackedPassword)
+    }
 }
