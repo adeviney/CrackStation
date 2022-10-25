@@ -1,6 +1,6 @@
 import Foundation
 
-public class CrackStation: Decrypter {
+public struct CrackStation: Decrypter {
     private var mappingToPlaintext: [String: String]
     
     enum CrackStationError: Error {
@@ -9,13 +9,15 @@ public class CrackStation: Decrypter {
         // case hashNotFound(String) (not currently implemented)
     }
 
-    /// When CrackStation is initailized, it will load the 
-    required public init() {
+    /// When CrackStation is initailized, it will load the lookup table that maps hashed passwords to plaintext
+    /// If it fails to load the data, it will intialize a blank dictionary and print the error message to the console.
+    /// In conformity to Decrypter protocol, it does not throw an error.
+    public init() {
         do {
             self.mappingToPlaintext = try CrackStation.loadDictionaryFromFile()
         } catch CrackStationError.failedToLoadHashFromDisk(let message) {
             self.mappingToPlaintext = [:]
-            print("Your CrackStation did not set up correctly and will not work.")
+            print("CrackStation instance could not find the necessary files in order to setup correctly.")
             print(message)
         } catch {
             self.mappingToPlaintext = [:]
@@ -46,7 +48,7 @@ public class CrackStation: Decrypter {
     /// Throws an error if the password is empty
     public func decrypt(shaHash: String) -> String? {
         if shaHash.isEmpty {
-            //throw CrackStationError.invalidPasswordInput("Your password is empty")
+            return nil
         }
         if let crackedPassword = self.mappingToPlaintext[shaHash] {
             return crackedPassword
