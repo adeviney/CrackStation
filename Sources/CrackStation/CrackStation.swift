@@ -1,6 +1,6 @@
 import Foundation
 
-public class CrackStation {
+public class CrackStation: Decrypter {
     private var mappingToPlaintext: [String: String]
     
     enum CrackStationError: Error {
@@ -9,14 +9,22 @@ public class CrackStation {
         // case hashNotFound(String) (not currently implemented)
     }
 
-    /// When CrackStation is initailized, it will attempt to load the look-up table from the file
-    /// If it is unable to load the dictionary, it will throw a `failedToLoadHashFromDisk` error
-    public init() throws {
+    /// When CrackStation is initailized, it will load the 
+    required public init() {
+        do {
             self.mappingToPlaintext = try CrackStation.loadDictionaryFromFile()
+        } catch CrackStationError.failedToLoadHashFromDisk(let message) {
+            self.mappingToPlaintext = [:]
+            print("Your CrackStation did not set up correctly and will not work.")
+            print(message)
+        } catch {
+            self.mappingToPlaintext = [:]
+            print("Unexpected error: \(error)")
+        }
     }
     
     
-    static func loadDictionaryFromFile() throws -> [String: String] {
+    public static func loadDictionaryFromFile() throws -> [String: String] {
         guard let filePath = Bundle.module.path(forResource: "HashtoPlaintextData", ofType: "json") else {
             throw CrackStationError.failedToLoadHashFromDisk("Could not find data resource in Bundle. Be sure that the dependency Crackstation/Sources/Resources/HashtoPlaintextData.json exists.")
         }
@@ -36,11 +44,11 @@ public class CrackStation {
     /// or, if unable to crack, then returns nil.
     ///
     /// Throws an error if the password is empty
-    public func crack(_ password: String) throws -> String? {
-        if password.isEmpty {
-            throw CrackStationError.invalidPasswordInput("Your password is empty")
+    public func decrypt(shaHash: String) -> String? {
+        if shaHash.isEmpty {
+            //throw CrackStationError.invalidPasswordInput("Your password is empty")
         }
-        if let crackedPassword = self.mappingToPlaintext[password] {
+        if let crackedPassword = self.mappingToPlaintext[shaHash] {
             return crackedPassword
         }
         else {
