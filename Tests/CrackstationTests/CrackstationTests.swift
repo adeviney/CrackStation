@@ -1,5 +1,5 @@
 import XCTest
-@testable import CrackStation
+import CrackStation
 
 final class CrackStationTests: XCTestCase {
     
@@ -16,51 +16,44 @@ final class CrackStationTests: XCTestCase {
             // Then
             XCTAssert(crackedpassword == "y")
         } catch {
-            XCTFail("unexpected error was thrown")
+            XCTFail("unexpected error was thrown: \(error)")
         }
-        
     }
+    
     func testCanCrack_oneChar_1() throws {
         // Given
-        let crackstation = try CrackStation()
+        let crackstation = CrackStation()
         // When
-        let crackedPassword = try crackstation.crack("86f7e437faa5a7fce15d1ddcb9eaeaea377667b8")
+        let crackedPassword = crackstation.decrypt(shaHash: "86f7e437faa5a7fce15d1ddcb9eaeaea377667b8")
         // Then
         XCTAssert(crackedPassword == "a")
-        
     }
     
     func testCanCrack_oneChar_2() throws {
         // Given
-        let crackstation = try CrackStation()
+        let crackstation = CrackStation()
         // When
-        let crackedPassword = try crackstation.crack("902ba3cda1883801594b6e1b452790cc53948fda")
+        let crackedPassword = crackstation.decrypt(shaHash: "902ba3cda1883801594b6e1b452790cc53948fda")
         // Then
         XCTAssert(crackedPassword == "7")
     }
     
     func testUnabletoCrack() throws {
         // Given
-        let crackstation = try CrackStation()
+        let crackstation = CrackStation()
         // When
-        let crackedPassword = try crackstation.crack("c48ee8a8448ed522eaf905a16361bdd816ededae")
+        let crackedPassword = crackstation.decrypt(shaHash: "c48ee8a8448ed522eaf905a16361bdd816ededae")
         // Then
         XCTAssertNil(crackedPassword)
     }
     
     func testEmptyInput() throws {
         // Given
-        let crackstation = try CrackStation()
-        do {
-            // When
-            let crackedPassword = try crackstation.crack("")
-            // Then
-            XCTAssertNil(crackedPassword)
-        } catch CrackStation.CrackStationError.invalidPasswordInput {
-            XCTAssert(true)
-        } catch {
-            XCTFail("unexpected error received")
-        }
+        let crackstation = CrackStation()
+        // When
+        let crackedPassword = crackstation.decrypt(shaHash: "")
+        // Then
+        XCTAssertNil(crackedPassword)
         
     }
 }
