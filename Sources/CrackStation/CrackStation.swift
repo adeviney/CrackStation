@@ -47,9 +47,6 @@ public struct CrackStation: Decrypter {
     ///
     /// Throws an error if the password is empty
     public func decrypt(shaHash: String) -> String? {
-        if shaHash.isEmpty {
-            return nil
-        }
         if let crackedPassword = self.mappingToPlaintext[shaHash] {
             return crackedPassword
         }
