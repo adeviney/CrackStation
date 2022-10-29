@@ -1,12 +1,14 @@
 import Foundation
 
 public struct CrackStation: Decrypter {
+    /// lookup Table. Maps hashed digest to plaintext.
     private var mappingToPlaintext: [String: String]
     
+    
+    /// Custom CrackStation Errors thrown when initialization fails unexpectedly
     enum CrackStationError: Error {
         case failedToLoadHashFromDisk(String)
         case invalidPasswordInput(String)
-        // case hashNotFound(String) (not currently implemented)
     }
 
     /// When CrackStation is initailized, it will load the lookup table that maps hashed passwords to plaintext
@@ -25,7 +27,8 @@ public struct CrackStation: Decrypter {
         }
     }
     
-    
+    /// Returns lookup table as a dictionary.
+    /// Data is read from file "HashtoPlaintextData.json" which is expected to be in the Resources folder.
     public static func loadDictionaryFromFile() throws -> [String: String] {
         guard let filePath = Bundle.module.path(forResource: "HashtoPlaintextData", ofType: "json") else {
             throw CrackStationError.failedToLoadHashFromDisk("Could not find data resource in Bundle. Be sure that the dependency Crackstation/Sources/Resources/HashtoPlaintextData.json exists.")
@@ -44,8 +47,6 @@ public struct CrackStation: Decrypter {
     
     /// Either returns the cracked plain-text password
     /// or, if unable to crack, then returns nil.
-    ///
-    /// Throws an error if the password is empty
     public func decrypt(shaHash: String) -> String? {
         if let crackedPassword = self.mappingToPlaintext[shaHash] {
             return crackedPassword
@@ -55,4 +56,3 @@ public struct CrackStation: Decrypter {
         }
     }
 }
-    
