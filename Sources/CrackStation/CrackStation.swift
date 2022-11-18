@@ -29,7 +29,7 @@ public struct CrackStation: Decrypter {
     
     /// Returns lookup table as a dictionary.
     /// Data is read from file "HashtoPlaintextData.json" which is expected to be in the Resources folder.
-    public static func loadDictionaryFromFile() throws -> [String: String] {
+    static func loadDictionaryFromFile() throws -> [String: String] {
         guard let filePath = Bundle.module.path(forResource: "HashtoPlaintextDataMVP", ofType: "json") else {
             throw CrackStationError.failedToLoadHashFromDisk("Could not find data resource in Bundle. Be sure that the dependency Crackstation/Sources/Resources/HashtoPlaintextDataMVP.json exists.")
         }

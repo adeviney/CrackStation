@@ -1,5 +1,5 @@
 import XCTest
-import CrackStation
+@testable import CrackStation
 import CryptoKit
 
 final class CrackStationTests: XCTestCase {

@@ -35,12 +35,6 @@ print(plaintextPassword as Any)
 #### 
 If the hash you passed is not known to CrackStation, it will return `nil`.
 
-### If you want a look-up table
-If you just want the look-up table for your own purposes, you can use the `loadDictionaryFromFile` method which returns a dictionary that maps hashed Strings to plain-text Strings. Note that this method will throw an error if CrackStation cannot find the file in its expected path.
-
-``` Swift
-let plaintextTable = try CrackStation.loadDictionaryFromFile()
-```
 
 ## Troubleshooting
 If the CrackStation is unable to set up correctly, it will print error messages to the console. Check the console if CrackStation is not able to crack passwords you'd expect it to. 
