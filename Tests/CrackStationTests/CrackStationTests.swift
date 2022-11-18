@@ -4,99 +4,99 @@ import CryptoKit
 
 final class CrackStationTests: XCTestCase {
     private let myCrackstation = CrackStation()
-    
+
     func testLoadDictionary() {
         do {
             // Given
             let numAllowedChars = 26+26+10+2
-            
-            let expectedNumPermutations = (numAllowedChars) + numAllowedChars*numAllowedChars + numAllowedChars*numAllowedChars*numAllowedChars
-            
+
+            let expectedNumPermutations =
+                (numAllowedChars) +
+                numAllowedChars*numAllowedChars +
+                numAllowedChars*numAllowedChars*numAllowedChars
+
             let arbitraryPassword = "abc"
-            
+
             let hashDigest = encryptUsingSha1(from: arbitraryPassword)
-            
-            
+
             // When
             let plaintextTable = try CrackStation.loadDictionaryFromFile()
             let crackedPassword = plaintextTable[hashDigest]
-            
+
             // Then
             XCTAssertNotNil(plaintextTable)
             XCTAssertEqual(plaintextTable.count, expectedNumPermutations*2)
             XCTAssertEqual(crackedPassword, arbitraryPassword)
-            
+
         } catch {
             XCTFail("unexpected error was thrown: \(error)")
         }
     }
-    
+
     func testCanCrackAllOneCharacterPasswordsSHA1() {
         for char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?" {
             // Given
             let password = String(char)
             let hashDigest = encryptUsingSha1(from: password)
-            
+
             // When
             let crackedPassword = myCrackstation.decrypt(shaHash: hashDigest)
-            
+
             // Then
             XCTAssertEqual(crackedPassword, password)
-            
+
         }
     }
-    
+
     func testCanCrackAllOneCharacterPasswordsSHA256() {
         for char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?" {
             // Given
             let password = String(char)
             let hashDigest = encryptUsingSha256(from: password)
-            
+
             // When
             let crackedPassword = myCrackstation.decrypt(shaHash: hashDigest)
-            
+
             // Then
             XCTAssertEqual(crackedPassword, password)
-            
+
         }
     }
-    
+
     func testCanCrackAllTwoCharacterPasswordsSHA1() throws {
         // Given
-        for first_char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?" {
-            for second_char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?" {
+        for firstChar in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?" {
+            for secondChar in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?" {
                 // Given
-                let password: String = String(first_char) + String(second_char)
+                let password: String = String(firstChar) + String(secondChar)
                 let hashDigest = encryptUsingSha1(from: password)
-                
+
                 // When
                 let crackedPassword = myCrackstation.decrypt(shaHash: hashDigest)
-                
+
                 // Then
                 XCTAssertEqual(crackedPassword, password)
             }
         }
-        
     }
-    
+
     func testCanCrackAllTwoCharacterPasswordsSHA256() throws {
         // Given
-        for first_char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?" {
-            for second_char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?" {
+        for firstChar in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?" {
+            for secondChar in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?" {
                 // Given
-                let password: String = String(first_char) + String(second_char)
+                let password: String = String(firstChar) + String(secondChar)
                 let hashDigest = encryptUsingSha256(from: password)
-                
+
                 // When
                 let crackedPassword = myCrackstation.decrypt(shaHash: hashDigest)
-                
+
                 // Then
                 XCTAssertEqual(crackedPassword, password)
             }
         }
-        
     }
-    
+
     func testCanCrackAllThreeCharacterPasswordsSHA1() throws {
         // Given
         for charOne in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789?!" {
@@ -104,17 +104,17 @@ final class CrackStationTests: XCTestCase {
                 for charThree in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789?!" {
                     let password: String = String(charOne) + String(charTwo) + String(charThree)
                     let hashDigest = encryptUsingSha1(from: password)
-                    
+
                     // When
                     let crackedPassword = myCrackstation.decrypt(shaHash: hashDigest)
-                    
+
                     // Then
                     XCTAssertEqual(crackedPassword, password)
                 }
             }
         }
     }
-    
+
     func testCanCrackAllThreeCharacterPasswordsSHA256() throws {
         // Given
         for charOne in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789?!" {
@@ -122,29 +122,29 @@ final class CrackStationTests: XCTestCase {
                 for charThree in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789?!" {
                     let password: String = String(charOne) + String(charTwo) + String(charThree)
                     let hashDigest = encryptUsingSha256(from: password)
-                    
+
                     // When
                     let crackedPassword = myCrackstation.decrypt(shaHash: hashDigest)
-                    
+
                     // Then
                     XCTAssertEqual(crackedPassword, password)
                 }
             }
         }
     }
-    
+
     func testUnabletoCrack() throws {
         // Given
         let password = "1234"
         let hashDigest = encryptUsingSha1(from: password)
-        
+
         // When
         let crackedPassword = myCrackstation.decrypt(shaHash: hashDigest)
-        
+
         // Then
         XCTAssertNil(crackedPassword)
     }
-    
+
     func testEmptyInput() throws {
         // Given
         let emptyShaHash = ""
@@ -154,9 +154,6 @@ final class CrackStationTests: XCTestCase {
         XCTAssertNil(crackedPassword)
     }
 }
-
-
-
 
 /// Helper function
 /// Input: a string
@@ -179,9 +176,9 @@ func encryptUsingSha256(from input: String) -> String {
 /// Extension on CryptoKit.Digest that gives access to hexStr (the digest as a String)
 extension Digest {
     var bytes: [UInt8] { Array(makeIterator()) }
-    var data: Data { Data (bytes) }
-    
+    var data: Data { Data(bytes) }
+
     var hexStr: String {
-        bytes.map { String(format:"%02x", $0) }.joined()
+        bytes.map { String(format: "%02x", $0) }.joined()
     }
 }
