@@ -2,7 +2,7 @@ import Foundation
 
 public struct CrackStation: Decrypter {
     /// lookup Table. Maps hashed digest to plaintext.
-    private var mappingToPlaintext: [String: String]
+    private let mappingToPlaintext: [String: String]
     
     
     /// Custom CrackStation Errors thrown when initialization fails unexpectedly
@@ -48,11 +48,6 @@ public struct CrackStation: Decrypter {
     /// Either returns the cracked plain-text password
     /// or, if unable to crack, then returns nil.
     public func decrypt(shaHash: String) -> String? {
-        if let crackedPassword = self.mappingToPlaintext[shaHash] {
-            return crackedPassword
-        }
-        else {
-            return nil
-        }
+        return mappingToPlaintext[shaHash]
     }
 }
